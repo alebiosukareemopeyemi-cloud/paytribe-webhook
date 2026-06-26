@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PayTribe — Group Payments, the Nigerian Way</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #00C566;
+    --green-dark: #009E52;
+    --green-glow: rgba(0,197,102,0.15);
+    --black: #0A0A0A;
+    --dark: #111411;
+    --card: #161C16;
+    --card2: #1A211A;
+    --border: rgba(255,255,255,0.08);
+    --text: #F0F4F0;
+    --muted: #7A8C7A;
+    --gold: #F5C842;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--black);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 22px;
+    color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .logo-dot { color: var(--green); }
+
+  nav .nav-links { display: flex; gap: 32px; align-items: center; }
+  nav .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+  nav .nav-links a:hover { color: var(--text); }
+
+  .btn-primary {
+    background: var(--green);
+    color: #000;
+    border: none; border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--green); color: var(--green); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,197,102,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-glow);
+    border: 1px solid rgba(0,197,102,0.3);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 13px; font-weight: 500;
+    color: var(--green);
+    margin-bottom: 32px;
+  }
+
+  .hero-badge span { width: 6px; height: 6px; background: var(--green); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(42px, 7vw, 80px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 24px;
+    max-width: 900px;
+  }
+
+  .hero h1 .accent { color: var(--green); }
+
+  .hero p {
+    font-size: clamp(16px, 2vw, 19px);
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  .hero-stats {
+    display: flex; gap: 48px; margin-top: 72px;
+    justify-content: center; flex-wrap: wrap;
+  }
+
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px; font-weight: 800;
+    color: var(--text);
+    display: block;
+  }
+  .stat-num .currency { color: var(--green); }
+  .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .stat-divider { width: 1px; background: var(--border); }
+
+  .hero-card {
+    margin-top: 64px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%; max-width: 400px;
+    text-align: left;
+    position: relative;
+  }
+
+  .hero-card::before {
+    content: 'LIVE';
+    position: absolute; top: 16px; right: 16px;
+    background: var(--green-glow);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 4px;
+    letter-spacing: 1px;
+  }
+
+  .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+  .card-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+
+  .progress-bar { background: rgba(255,255,255,0.08); border-radius: 100px; height: 8px; margin-bottom: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--green-dark), var(--green)); width: 73%; }
+
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  .progress-label strong { color: var(--text); }
+
+  .member-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--border); }
+  .member-info { display: flex; align-items: center; gap: 10px; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #000; }
+  .member-name { font-size: 13px; font-weight: 500; }
+  .badge-paid { background: var(--green-glow); color: var(--green); border: 1px solid rgba(0,197,102,0.3); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+  .badge-due { background: rgba(245,200,66,0.1); color: var(--gold); border: 1px solid rgba(245,200,66,0.3); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+
+  section { padding: 100px 24px; }
+
+  .section-label { font-size: 12px; font-weight: 600; letter-spacing: 2px; color: var(--green); text-transform: uppercase; margin-bottom: 16px; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: clamp(28px, 4vw, 44px); font-weight: 800; line-height: 1.1; letter-spacing: -1px; margin-bottom: 16px; }
+  .section-sub { font-size: 17px; color: var(--muted); line-height: 1.7; max-width: 520px; }
+
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .group-types { background: var(--dark); }
+
+  .group-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 56px; }
+
+  .group-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px; transition: all 0.3s; cursor: pointer; }
+  .group-card:hover { border-color: rgba(0,197,102,0.4); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,197,102,0.08); }
+
+  .group-icon { font-size: 32px; margin-bottom: 16px; }
+  .group-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; margin-bottom: 8px; }
+  .group-desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+  .group-tag { font-size: 12px; color: var(--green); font-weight: 500; }
+
+  .how-it-works { background: var(--black); }
+
+  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 56px; max-width: 640px; }
+
+  .step { display: flex; gap: 24px; position: relative; padding-bottom: 40px; }
+  .step:last-child { padding-bottom: 0; }
+
+  .step-line { display: flex; flex-direction: column; align-items: center; }
+
+  .step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--green-glow); border: 1px solid rgba(0,197,102,0.4); color: var(--green); font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+  .step-connector { width: 1px; flex: 1; min-height: 30px; background: linear-gradient(to bottom, rgba(0,197,102,0.3), transparent); margin-top: 8px; }
+  .step:last-child .step-connector { display: none; }
+
+  .step-content { padding-top: 8px; }
+  .step-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; margin-bottom: 6px; }
+  .step-desc { font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+  .trust { background: var(--dark); }
+
+  .trust-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 56px; }
+
+  .trust-card { background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+  .trust-icon { font-size: 24px; margin-bottom: 12px; }
+  .trust-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+  .trust-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  .cta-section { background: var(--black); text-align: center; }
+
+  .cta-box { background: var(--card); border: 1px solid rgba(0,197,102,0.2); border-radius: 24px; padding: 72px 48px; position: relative; overflow: hidden; max-width: 800px; margin: 0 auto; }
+
+  .cta-box::before { content: ''; position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,197,102,0.1) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+
+  .cta-box h2 { font-family: 'Syne', sans-serif; font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -1px; margin-bottom: 16px; position: relative; }
+  .cta-box p { color: var(--muted); font-size: 17px; margin-bottom: 32px; position: relative; }
+  .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
+
+  footer { border-top: 1px solid var(--border); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; }
+  .footer-copy { font-size: 13px; color: var(--muted); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; }
+  .footer-links a:hover { color: var(--green); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">PayTribe<span class="logo-dot">.</span></div>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#groups">Group types</a>
+    <a href="#trust">Security</a>
+    <a href="#" class="btn-outline">Log in</a>
+    <a href="#" class="btn-primary">Start a group</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">
+    <span></span> Now live — Built on Nomba
+  </div>
+  <h1>Group payments,<br>the <span class="accent">Nigerian</span> way.</h1>
+  <p>Ajo circles, group travel, event contributions, family upkeep — all automated, accountable, and trusted. No more coordinator stress.</p>
+  <div class="hero-cta">
+    <a href="#" class="btn-primary" style="padding: 14px 28px; font-size: 15px;">Create a group</a>
+    <a href="#how" class="btn-outline" style="padding: 14px 28px; font-size: 15px;">See how it works</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num"><span class="currency">₦</span>0 fees</span>
+      <div class="stat-label">To create a group</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num">4</span>
+      <div class="stat-label">Group types</div>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num">100%</span>
+      <div class="stat-label">Automated billing</div>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="card-title">Lagos Girls Dubai Trip 2026 ✈️</div>
+    <div class="card-sub">Group Travel Fund · 8 members · Due July 15</div>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div class="progress-label">
+      <span><strong>₦730,000</strong> raised</span>
+      <span>of ₦1,000,000</span>
+    </div>
+    <div class="member-row">
+      <div class="member-info">
+        <div class="avatar" style="background:#00C566;">AO</div>
+        <span class="member-name">Amaka O.</span>
+      </div>
+      <span class="badge-paid">Paid ✓</span>
+    </div>
+    <div class="member-row">
+      <div class="member-info">
+        <div class="avatar" style="background:#F5C842;">TK</div>
+        <span class="member-name">Tunde K.</span>
+      </div>
+      <span class="badge-paid">Paid ✓</span>
+    </div>
+    <div class="member-row">
+      <div class="member-info">
+        <div class="avatar" style="background:#7A8C7A;">NN</div>
+        <span class="member-name">Ngozi N.</span>
+      </div>
+      <span class="badge-due">Due today</span>
+    </div>
+  </div>
+</section>
+
+<section class="group-types" id="groups">
+  <div class="container">
+    <div class="section-label">Group Types</div>
+    <div class="section-title">Built for how Nigerians<br>already move money</div>
+    <p class="section-sub">Four group structures, each designed around a real financial behaviour that's existed in Nigeria for generations.</p>
+    <div class="group-grid">
+      <div class="group-card">
+        <div class="group-icon">🔄</div>
+        <div class="group-name">Ajo / Esusu</div>
+        <div class="group-desc">Rotating savings circles. Everyone contributes monthly, one member wins the pot. Fully automated — no coordinator needed.</div>
+        <div class="group-tag">Auto-payout on cycle end →</div>
+      </div>
+      <div class="group-card">
+        <div class="group-icon">✈️</div>
+        <div class="group-name">Group Travel</div>
+        <div class="group-desc">Set a trip goal, everyone pays installments. When the target is hit, funds go directly to your travel agent.</div>
+        <div class="group-tag">Goal-locked payout →</div>
+      </div>
+      <div class="group-card">
+        <div class="group-icon">💒</div>
+        <div class="group-name">Event Contributions</div>
+        <div class="group-desc">Wedding, burial, birthday. Share a link, anyone contributes. Live total visible to all. Funds released on your event date.</div>
+        <div class="group-tag">Shareable link, no signup →</div>
+      </div>
+      <div class="group-card">
+        <div class="group-icon">🏠</div>
+        <div class="group-name">Family Upkeep</div>
+        <div class="group-desc">Children contribute monthly to parents' upkeep. Auto-charged, auto-transferred. No more "who sent money?" on WhatsApp.</div>
+        <div class="group-tag">Auto-transfer to parent →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how-it-works" id="how">
+  <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;">
+    <div>
+      <div class="section-label">How it works</div>
+      <div class="section-title">Up and running<br>in 3 steps</div>
+      <p class="section-sub">No bank visits, no spreadsheets, no trust issues. Just a link and a goal.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-line">
+          <div class="step-num">1</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Create your group</div>
+          <div class="step-desc">Choose a group type, set your goal amount, billing cycle, and number of members. Takes 2 minutes.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line">
+          <div class="step-num">2</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Invite your people</div>
+          <div class="step-desc">Share your group link on WhatsApp. Members join, add their card once, and PayTribe handles every charge automatically.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line">
+          <div class="step-num">3</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-title">Watch the money move</div>
+          <div class="step-desc">Auto-charges on due date. Failed payments retry automatically. When the goal is hit, funds go exactly where they should.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust" id="trust">
+  <div class="container">
+    <div class="section-label">Built for trust</div>
+    <div class="section-title">The coordinator can't<br>run away anymore</div>
+    <p class="section-sub">Every naira is accounted for. Every payment is automated. Every member has visibility.</p>
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="trust-icon">🔒</div>
+        <div class="trust-title">Group Vault</div>
+        <div class="trust-desc">Money is held securely until conditions are met. Not even the admin can touch it early.</div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">📊</div>
+        <div class="trust-title">Full Transparency</div>
+        <div class="trust-desc">Every member sees who paid, who hasn't, and exactly how much is in the pool — in real time.</div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">🔁</div>
+        <div class="trust-title">Smart Retry</div>
+        <div class="trust-desc">Card declined? PayTribe automatically retries at day 1, 3, and 7. Members get notified at each step.</div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">⭐</div>
+        <div class="trust-title">Trust Score</div>
+        <div class="trust-desc">Every member earns a score based on payment history. High scorers get access to premium circles.</div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">🎁</div>
+        <div class="trust-title">Early Bird Rewards</div>
+        <div class="trust-desc">Pay before your due date and earn airtime credit. Good behaviour gets rewarded instantly.</div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">📄</div>
+        <div class="trust-title">Proof of Contribution</div>
+        <div class="trust-desc">Download a full statement of your group's transactions. Useful for cooperatives and associations.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <h2>Your tribe is waiting.<br>Start collecting.</h2>
+      <p>Create your first group in 2 minutes. Free forever for up to 10 members.</p>
+      <div class="cta-buttons">
+        <a href="#" class="btn-primary" style="padding: 14px 28px; font-size: 15px;">Create a group →</a>
+        <a href="#" class="btn-outline" style="padding: 14px 28px; font-size: 15px;">See a demo</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">PayTribe<span style="color:var(--green)">.</span></div>
+  <div class="footer-copy">© 2026 PayTribe. Built on Nomba.</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Support</a>
+  </div>
+</footer>
+
+</body>
+</html>
